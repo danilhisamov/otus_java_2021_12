@@ -5,56 +5,57 @@ import util.ReflectionHelper;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TestExecutor {
-    private static final String SUCCESS = "success";
-    private static final String FAILED = "failed";
 
-    public static void runTestClass(Class<?> clazz) {
-        Method before = null;
-        Method after = null;
-        ArrayList<Method> tests = new ArrayList<>();
-        var results = initResultMap();
+    public void runTestClass(Class<?> clazz) {
+        final var info = parseTestClass(clazz);
 
-        for (Method method : clazz.getDeclaredMethods()) {
-            if (method.isAnnotationPresent(Test.class)) {
-                tests.add(method);
-            } else if (method.isAnnotationPresent(Before.class)) {
-                before = method;
-            } else if (method.isAnnotationPresent(After.class)) {
-                after = method;
-            }
-        }
+        info.tests.forEach(test -> runTest(clazz, test, info));
 
-        for (Method testMethod : tests) {
-            runTest(clazz, before, testMethod, after, results);
-        }
-
-        System.out.printf("Results: Total[%s], Success[%s], Failed[%s]%n", tests.size(), results.get(SUCCESS), results.get(FAILED));
+        System.out.println(info);
     }
 
-    private static void runTest(Class<?> testClass, Method before, Method testMethod, Method after, Map<String, Integer> results) {
+    private void runTest(Class<?> testClass, Method testMethod, TestInfo info) {
         Object testInstance = null;
         try {
             testInstance = ReflectionHelper.instantiate(testClass);
-            ReflectionHelper.callMethod(testInstance, before.getName());
+            ReflectionHelper.callMethod(testInstance, info.before.getName());
             ReflectionHelper.callMethod(testInstance, testMethod.getName());
             System.out.println("Test successfully finished: " + testMethod.getName());
-            results.computeIfPresent(SUCCESS, (k, v) -> ++v);
+            info.success++;
         } catch (Exception e) {
             System.out.println("Error during test execution: " + testMethod.getName());
-            results.computeIfPresent(FAILED, (k, v) -> ++v);
+            info.failed++;
         } finally {
-            ReflectionHelper.callMethod(testInstance, after.getName());
+            ReflectionHelper.callMethod(testInstance, info.after.getName());
         }
     }
 
-    private static Map<String, Integer> initResultMap() {
-        Map<String, Integer> results = new HashMap<>();
-        results.put(SUCCESS, 0);
-        results.put(FAILED, 0);
-        return results;
+    private TestInfo parseTestClass(Class<?> clazz) {
+        var info = new TestInfo();
+        for (Method method : clazz.getDeclaredMethods()) {
+            if (method.isAnnotationPresent(Test.class)) {
+                info.tests.add(method);
+            } else if (method.isAnnotationPresent(Before.class)) {
+                info.before = method;
+            } else if (method.isAnnotationPresent(After.class)) {
+                info.after = method;
+            }
+        }
+        return info;
+    }
+
+    private class TestInfo {
+        private Method before;
+        private Method after;
+        private final ArrayList<Method> tests = new ArrayList<>();
+        private Integer success = 0;
+        private Integer failed = 0;
+
+        @Override
+        public String toString() {
+            return String.format("Results: Total[%s], Success[%s], Failed[%s]%n", tests.size(), success, failed);
+        }
     }
 }
