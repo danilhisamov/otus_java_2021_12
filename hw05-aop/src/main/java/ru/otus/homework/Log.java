@@ -18,7 +18,7 @@ public @interface Log {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             if (isOverriddenMethodAnnotatedWith(method, Log.class)) {
-                System.out.printf("Log pre-processing: %s(%s)%n", method.getName(), Arrays.toString(args));
+                System.out.printf("executed method: %s, param: %s%n", method.getName(), Arrays.toString(args));
             }
             return method.invoke(calculable, args);
         }
