@@ -1,7 +1,8 @@
 plugins {
     id 'idea'
-    id "io.spring.dependency-management" version "1.0.11.RELEASE"
+    id 'io.spring.dependency-management' version "1.0.11.RELEASE"
     id 'com.github.johnrengelman.shadow' version '6.1.0' apply false
+    id 'io.freefair.lombok' version "${lombokVersion}" apply false
 }
 
 idea {
