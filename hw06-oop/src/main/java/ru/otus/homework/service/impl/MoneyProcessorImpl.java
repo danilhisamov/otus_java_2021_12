@@ -23,11 +23,7 @@ public class MoneyProcessorImpl implements MoneyProcessor {
     }
 
     public Map<Nominal, Integer> give(Integer sum) {
-        var sortedNominals = moneyHolder.getNominals()
-                .stream()
-                .sorted(Comparator.comparingInt(Nominal::getValue).reversed())
-                .toList();
-
+        var sortedNominals = moneyHolder.getNominals().stream().toList();
         var calculatedNominals = calculateNominalsCount(sortedNominals, sum);
 
         return moneyHolder.extract(calculatedNominals);

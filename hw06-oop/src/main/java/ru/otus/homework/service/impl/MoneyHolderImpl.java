@@ -3,12 +3,10 @@ package ru.otus.homework.service.impl;
 import ru.otus.homework.Nominal;
 import ru.otus.homework.service.MoneyHolder;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class MoneyHolderImpl implements MoneyHolder {
-    private final Map<Nominal, Integer> cells = new HashMap<>();
+    private final TreeMap<Nominal, Integer> cells = new TreeMap<>(Comparator.comparing(Nominal::getValue).reversed());
 
     public void put(Nominal nominal, Integer count) {
         cells.put(nominal, cells.getOrDefault(nominal, 0) + count);
@@ -39,8 +37,8 @@ public class MoneyHolderImpl implements MoneyHolder {
         return cells.getOrDefault(nominal, 0);
     }
 
-    public Set<Nominal> getNominals() {
-        return cells.keySet();
+    public NavigableSet<Nominal> getNominals() {
+        return cells.navigableKeySet();
     }
 
     @Override
