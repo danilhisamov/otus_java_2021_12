@@ -6,3 +6,6 @@ include 'hw04-gc'
 include 'hw05-aop'
 include 'hw06-oop'
 include 'hw08-io'
+
+include 'hw09-jdbc:demo'
+include 'hw09-jdbc:homework'
