@@ -1,5 +1,6 @@
 package ru.otus.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectForMessage {
@@ -15,7 +16,9 @@ public class ObjectForMessage {
 
     public ObjectForMessage copy() {
         var copy = new ObjectForMessage();
-        copy.setData(List.copyOf(this.data));
+        if (this.data != null) {
+            copy.setData(new ArrayList<>(this.data));
+        }
         return copy;
     }
 }
