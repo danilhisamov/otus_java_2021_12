@@ -12,4 +12,10 @@ public class ObjectForMessage {
     public void setData(List<String> data) {
         this.data = data;
     }
+
+    public ObjectForMessage copy() {
+        var copy = new ObjectForMessage();
+        copy.setData(List.copyOf(this.data));
+        return copy;
+    }
 }
