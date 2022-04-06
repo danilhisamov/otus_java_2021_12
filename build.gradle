@@ -30,6 +30,8 @@ allprojects {
                 mavenBom("org.springframework.boot:spring-boot-dependencies:2.5.2")
             }
             dependency("com.google.guava:guava:${Versions.guava}")
+            dependency("org.testcontainers:junit-jupiter:${Versions.testcontainers}")
+            dependency("org.testcontainers:postgresql:${Versions.testcontainers}")
             dependency("org.glassfish:javax.json:${Versions.glassfishJson}")
             dependency("com.google.protobuf:protobuf-java-util:${Versions.protobuf}")
         }
@@ -38,8 +40,8 @@ allprojects {
     configurations.all {
         resolutionStrategy {
             failOnVersionConflict()
-        }
-        resolutionStrategy {
+
+            force("net.java.dev.jna:jna:5.8.0")
             force("javax.servlet:servlet-api:2.4")
             force("commons-logging:commons-logging:1.1.1")
             force("commons-lang:commons-lang:2.5")
