@@ -10,22 +10,23 @@ import ru.otus.crm.service.DBServiceClient;
 import java.util.List;
 import java.util.Optional;
 
-public class DbServiceClientWIthCacheImpl implements DBServiceClient {
-    private static final Logger log = LoggerFactory.getLogger(DbServiceClientWIthCacheImpl.class);
+public class DbServiceClientWithCacheImpl implements DBServiceClient {
+    private static final Logger log = LoggerFactory.getLogger(DbServiceClientWithCacheImpl.class);
 
     private final DataTemplate<Client> dataTemplate;
     private final TransactionRunner transactionRunner;
 
     private final MyCache<Long, Client> cache = new MyCache<>();
 
-    public DbServiceClientWIthCacheImpl(TransactionRunner transactionRunner, DataTemplate<Client> dataTemplate) {
+    public DbServiceClientWithCacheImpl(TransactionRunner transactionRunner,
+                                        DataTemplate<Client> dataTemplate) {
         this.transactionRunner = transactionRunner;
         this.dataTemplate = dataTemplate;
     }
 
     @Override
     public Client saveClient(Client client) {
-        var saved =  transactionRunner.doInTransaction(connection -> {
+        var saved = transactionRunner.doInTransaction(connection -> {
             if (client.getId() == null) {
                 var clientId = dataTemplate.insert(connection, client);
                 var createdClient = new Client(clientId, client.getName());
@@ -39,7 +40,7 @@ public class DbServiceClientWIthCacheImpl implements DBServiceClient {
 
         cache.put(saved.getId(), client);
 
-        return client;
+        return saved;
     }
 
     @Override
@@ -64,6 +65,6 @@ public class DbServiceClientWIthCacheImpl implements DBServiceClient {
             var clientList = dataTemplate.findAll(connection);
             log.info("clientList:{}", clientList);
             return clientList;
-       });
+        });
     }
 }
