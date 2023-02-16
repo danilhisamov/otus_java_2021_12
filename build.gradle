@@ -1,8 +1,9 @@
 plugins {
     id 'idea'
-    id 'io.spring.dependency-management' version "1.0.11.RELEASE"
-    id 'com.github.johnrengelman.shadow' version '6.1.0' apply false
-    id 'io.freefair.lombok' version "${lombokVersion}" apply false
+    id 'java'
+    id 'io.spring.dependency-management' version "${springDM_version}"
+    id 'com.github.johnrengelman.shadow' version "${shadow_version}" apply false
+    id 'io.freefair.lombok' version "${lombok_version}" apply false
 }
 
 idea {
@@ -23,11 +24,14 @@ allprojects {
         mavenCentral()
     }
 
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+
     apply plugin: "io.spring.dependency-management"
     dependencyManagement {
         dependencies {
             imports {
-                mavenBom("org.springframework.boot:spring-boot-dependencies:2.5.2")
+                mavenBom("org.springframework.boot:spring-boot-dependencies:${Versions.springBootDependencies}")
             }
             dependency("com.google.guava:guava:${Versions.guava}")
             dependency("org.testcontainers:junit-jupiter:${Versions.testcontainers}")
