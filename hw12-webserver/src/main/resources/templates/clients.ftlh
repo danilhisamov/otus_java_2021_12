@@ -78,19 +78,19 @@
             <tbody>
             <#list clients as client>
                 <tr>
-                    <td>${client.id}</td>
-                    <td>${client.name}</td>
+                    <td>${client.id()}</td>
+                    <td>${client.name()}</td>
                     <td>
-                        <#if client.address??>
-                            <p>ID: ${client.address.id}</p>
-                            <p>Улица: ${client.address.street}</p>
+                        <#if client.address()??>
+                            <p>ID: ${client.address().id()}</p>
+                            <p>Улица: ${client.address().street()}</p>
                         </#if>
                     </td>
                     <td>
-                        <#list client.phones as phone>
+                        <#list client.phones() as phone>
                             <div>
-                                <p>ID: ${phone.id}</p>
-                                <p>Номер: ${phone.number}</p>
+                                <p>ID: ${phone.id()}</p>
+                                <p>Номер: ${phone.number()}</p>
                             </div>
                         </#list>
                     </td>

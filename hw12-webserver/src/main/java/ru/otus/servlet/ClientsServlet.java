@@ -1,17 +1,14 @@
 package ru.otus.servlet;
 
-import com.google.gson.Gson;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.otus.crm.model.Client;
 import ru.otus.crm.service.DBServiceClient;
+import ru.otus.model.ClientDTO;
 import ru.otus.services.TemplateProcessor;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ClientsServlet extends HttpServlet {
     private static final String TEMPLATE = "clients.ftlh";
@@ -26,8 +23,9 @@ public class ClientsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse response) throws IOException {
+        var clients = dbServiceClient.findAll().stream().map(ClientDTO::fromEntity).toList();
         Map<String, Object> paramsMap = Map.of(
-                "clients", dbServiceClient.findAll()
+                "clients", clients
         );
 
         response.setContentType("text/html");

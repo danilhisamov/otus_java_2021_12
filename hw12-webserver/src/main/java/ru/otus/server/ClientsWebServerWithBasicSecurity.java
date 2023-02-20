@@ -1,7 +1,6 @@
 package ru.otus.server;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.LoginService;
@@ -30,19 +29,39 @@ public class ClientsWebServerWithBasicSecurity implements ClientsWebServer {
     private static final String START_PAGE_NAME = "index.html";
     private static final String COMMON_RESOURCES_DIR = "static";
     private final DBServiceClient dbServiceClient;
-    private final Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();;
+    private final Gson gson;
     protected final TemplateProcessor templateProcessor;
     private final Server server;
     private final LoginService loginService;
 
     public ClientsWebServerWithBasicSecurity(int port,
+                                             Gson gson,
                                              LoginService loginService,
                                              DBServiceClient dbServiceClient,
                                              TemplateProcessor templateProcessor) {
+        this.gson = gson;
         this.dbServiceClient = dbServiceClient;
         this.templateProcessor = templateProcessor;
         this.loginService = loginService;
         server = new Server(port);
+    }
+
+    @Override
+    public void start() throws Exception {
+        if (server.getHandlers().length == 0) {
+            initContext();
+        }
+        server.start();
+    }
+
+    @Override
+    public void join() throws Exception {
+        server.join();
+    }
+
+    @Override
+    public void stop() throws Exception {
+        server.stop();
     }
 
     private Server initContext() {
@@ -97,23 +116,5 @@ public class ClientsWebServerWithBasicSecurity implements ClientsWebServer {
 
         return security;
 
-    }
-
-    @Override
-    public void start() throws Exception {
-        if (server.getHandlers().length == 0) {
-            initContext();
-        }
-        server.start();
-    }
-
-    @Override
-    public void join() throws Exception {
-        server.join();
-    }
-
-    @Override
-    public void stop() throws Exception {
-        server.stop();
     }
 }

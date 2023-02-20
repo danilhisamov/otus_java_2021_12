@@ -1,5 +1,6 @@
 package ru.otus;
 
+import com.google.gson.GsonBuilder;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.LoginService;
 import org.hibernate.cfg.Configuration;
@@ -29,14 +30,14 @@ public class ClientsServerWithBasicSecurityDemo {
 
     public static void main(String[] args) throws Exception {
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
-
+        var gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
         String hashLoginServiceConfigPath = FileSystemHelper.localFileNameOrResourceNameToFullPath(HASH_LOGIN_SERVICE_CONFIG_NAME);
         LoginService loginService = new HashLoginService(REALM_NAME, hashLoginServiceConfigPath);
 
         var dbServiceClient = createDBServiceClient();
 
         ClientsWebServer clientsWebServer = new ClientsWebServerWithBasicSecurity(WEB_SERVER_PORT,
-                loginService, dbServiceClient, templateProcessor);
+                gson, loginService, dbServiceClient, templateProcessor);
 
         initClients(dbServiceClient);
 
