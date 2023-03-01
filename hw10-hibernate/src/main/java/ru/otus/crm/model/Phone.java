@@ -2,7 +2,7 @@ package ru.otus.crm.model;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "phone")

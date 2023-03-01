@@ -2,6 +2,7 @@ plugins {
     id 'idea'
     id 'java'
     id 'io.spring.dependency-management' version "${springDM_version}"
+    id "org.springframework.boot" version "${springBoot_version}" apply false
     id 'com.github.johnrengelman.shadow' version "${shadow_version}" apply false
     id 'io.freefair.lombok' version "${lombok_version}" apply false
 }
@@ -31,7 +32,7 @@ allprojects {
     dependencyManagement {
         dependencies {
             imports {
-                mavenBom("org.springframework.boot:spring-boot-dependencies:${Versions.springBootDependencies}")
+                mavenBom("org.springframework.boot:spring-boot-dependencies:${springBoot_version}")
             }
             dependency("com.google.guava:guava:${Versions.guava}")
             dependency("org.testcontainers:junit-jupiter:${Versions.testcontainers}")
