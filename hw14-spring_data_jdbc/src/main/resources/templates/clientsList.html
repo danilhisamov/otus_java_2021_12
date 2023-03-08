@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Clients List</title>
+
+    <style>
+        .container {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .clients-list {
+            width: 50%;
+        }
+
+        .clients-list > table {
+            width: 100%;
+            text-align: center;
+        }
+
+        .clients-list > table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="clients-list">
+        <h4>Список клиентов</h4>
+        <table id="client-table">
+            <thead>
+            <tr>
+                <td>Id</td>
+                <td>Имя</td>
+                <td>Адрес</td>
+                <td>Телефоны</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="client : ${clients}">
+                <td th:text="${client.id}"></td>
+                <td th:text="${client.name}"></td>
+                <td>
+                    <span th:text="${client.address?.id}"></span>
+                    <span th:text="${client.address?.street}"></span>
+                </td>
+                <td>
+                    <div th:if="${client.phones != null}" th:each="phone : ${client.phones}">
+                        <span th:text="${phone.id}"></span>
+                        <span th:text="${phone.number}"></span>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div>
+            <a th:href="@{/clients/create}" href="clientCreate.html">New client</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

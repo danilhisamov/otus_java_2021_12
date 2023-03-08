@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Create client</title>
+
+    <style>
+        .create-form {
+            width: 50%;
+        }
+
+        .create-form > input {
+            display: block;
+            width: 75%;
+        }
+    </style>
+    <script>
+        function postClient() {
+            let client = {
+                name: document.getElementById('name').value,
+                address: {
+                    street: document.getElementById('street').value
+                },
+                phones: [
+                    {
+                        number: document.getElementById('phone_number').value,
+                    }
+                ]
+            };
+
+            fetch('/api/clients', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(client)
+            })
+                .then(resp => resp.json())
+                .then(json => alert('Created: ' + JSON.stringify(json, null, 1)))
+        }
+    </script>
+</head>
+<body>
+<a th:href="@{/clients}">Назад к списку клиентов</a>
+<form class="create-form" th:action="@{/clients/create}" th:method="post" th:object="${client}">
+    <h4>Создать клиента</h4>
+    <input type="text" id="name" name="name" th:field="*{name}" placeholder="Введите имя">
+    <input type="text" id="street" name="street" th:field="*{address.street}" placeholder="Введите адрес">
+    <input th:each="ph,phStat : *{phones}" type="tel" id="phone_number" name="phone_number" th:field="*{phones[__${phStat.index}__].number}" placeholder="Введите номер телефона">
+    <button type="submit">Создать via form</button>
+    <button type="button" onclick="postClient()">Создать via REST</button>
+</form>
+</body>
+</html>
