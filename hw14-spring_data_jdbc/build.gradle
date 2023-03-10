@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot'
+    id 'io.freefair.lombok'
+}
+
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+
+dependencies {
+    dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+
+        implementation 'org.postgresql:postgresql'
+        implementation 'org.flywaydb:flyway-core'
+
+        implementation 'ch.qos.logback:logback-classic'
+        implementation 'org.projectlombok:lombok'
+    }
+}
+
+test {
+}
