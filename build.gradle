@@ -33,12 +33,18 @@ allprojects {
         dependencies {
             imports {
                 mavenBom("org.springframework.boot:spring-boot-dependencies:${springBoot_version}")
+                mavenBom("com.google.protobuf:protobuf-bom:${protobuf_version}")
             }
+
             dependency("com.google.guava:guava:${Versions.guava}")
+            dependency("org.glassfish:javax.json:${Versions.glassfishJson}")
+
             dependency("org.testcontainers:junit-jupiter:${Versions.testcontainers}")
             dependency("org.testcontainers:postgresql:${Versions.testcontainers}")
-            dependency("org.glassfish:javax.json:${Versions.glassfishJson}")
-            dependency("com.google.protobuf:protobuf-java-util:${Versions.protobuf}")
+
+            dependency("io.grpc:grpc-netty:${Versions.grpc}")
+            dependency("io.grpc:grpc-protobuf:${Versions.grpc}")
+            dependency("io.grpc:grpc-stub:${Versions.grpc}")
         }
     }
 
@@ -54,7 +60,7 @@ allprojects {
             force("org.codehaus.jackson:jackson-mapper-asl:1.8.3")
             force("org.codehaus.jettison:jettison:1.1")
             force("net.java.dev.jna:jna:5.8.0")
-            force("com.google.errorprone:error_prone_annotations:2.11.0")
+            force("com.google.errorprone:error_prone_annotations:2.7.1")
         }
     }
 }

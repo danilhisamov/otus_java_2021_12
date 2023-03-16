@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package ru.otus.protobuf.generated;
+
+option java_multiple_files = true;
+
+message GenerateSequenceMessage {
+    int32 from = 1;
+    int32 to = 2;
+}
+
+message SequenceMessage {
+    int32 number = 1;
+}
+
+message Empty {}
+
+service SequenceService {
+    rpc generateSequence(GenerateSequenceMessage) returns (stream SequenceMessage);
+}
