@@ -47,7 +47,7 @@ public class GRPCClient {
     }
 
     private static void processSequenceMessage(SequenceMessage sequenceMessage) {
-        var updatedValue = value.updateAndGet(i -> i + sequenceMessage.getNumber() + 1);
+        var updatedValue = value.updateAndGet(i -> i + sequenceMessage.getNumber());
         log.info("Received server-side number: {}. Set value to {}",
                 sequenceMessage.getNumber(),
                 updatedValue);
