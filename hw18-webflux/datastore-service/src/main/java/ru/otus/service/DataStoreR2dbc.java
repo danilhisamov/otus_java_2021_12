@@ -18,8 +18,6 @@ public class DataStoreR2dbc implements DataStore {
     private static final Logger log = LoggerFactory.getLogger(DataStoreR2dbc.class);
     private final MessageRepository messageRepository;
     private final Scheduler workerPool;
-    @Value("${app.special-room}")
-    private String specialRoom;
 
     public DataStoreR2dbc(Scheduler workerPool, MessageRepository messageRepository) {
         this.workerPool = workerPool;
@@ -29,24 +27,22 @@ public class DataStoreR2dbc implements DataStore {
     @Override
     public Mono<Message> saveMessage(Message message) {
         log.info("saveMessage:{}", message);
-        if (specialRoom.equals(message.getRoomId())) {
-            throw new IllegalArgumentException(String.format("Message cannot be saved with room: %s", specialRoom));
-        }
         return messageRepository.save(message);
     }
 
     @Override
     public Flux<Message> loadMessages(String roomId) {
         log.info("loadMessages roomId:{}", roomId);
+        return messageRepository
+                .findAllByRoomIdOrderByIdAsc(roomId)
+                .delayElements(Duration.of(3, SECONDS), workerPool);
+    }
 
-        Flux<Message> messageFlux;
-        if (specialRoom.equals(roomId)) {
-            messageFlux = messageRepository.findAllByOrderByIdAsc();
-        } else {
-            messageFlux = messageRepository.findAllByRoomIdOrderByIdAsc(roomId);
-        }
-
-        return messageFlux
+    @Override
+    public Flux<Message> loadAllMessages() {
+        log.info("all messages");
+        return messageRepository
+                .findAllByOrderByIdAsc()
                 .delayElements(Duration.of(3, SECONDS), workerPool);
     }
 }

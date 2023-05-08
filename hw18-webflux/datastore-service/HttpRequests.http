@@ -9,4 +9,4 @@ Cache-Control: no-cache
 }
 
 ###
-GET http://localhost:8081/msg/1
+GET http://localhost:8081/msg/all

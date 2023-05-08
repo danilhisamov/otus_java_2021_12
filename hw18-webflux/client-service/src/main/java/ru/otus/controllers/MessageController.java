@@ -26,12 +26,13 @@ public class MessageController {
 
     private final WebClient datastoreClient;
     private final SimpMessagingTemplate template;
-    @Value("${app.special-room}")
-    private String specialRoom;
+    private final String specialRoom;
 
-    public MessageController(WebClient datastoreClient, SimpMessagingTemplate template) {
+    public MessageController(WebClient datastoreClient, SimpMessagingTemplate template,
+                             @Value("${app.special-room}") String specialRoom) {
         this.datastoreClient = datastoreClient;
         this.template = template;
+        this.specialRoom = specialRoom;
     }
 
     @MessageMapping("/message.{roomId}")
@@ -86,7 +87,8 @@ public class MessageController {
     }
 
     private Flux<Message> getMessagesByRoomId(long roomId) {
-        return datastoreClient.get().uri(String.format("/msg/%s", roomId))
+        return datastoreClient.get()
+                .uri(String.format("/msg/%s", specialRoom.equals(String.valueOf(roomId)) ? "all" : roomId))
                 .accept(MediaType.APPLICATION_NDJSON)
                 .exchangeToFlux(response -> {
                     if (response.statusCode().equals(HttpStatus.OK)) {
